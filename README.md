@@ -1,2 +1,2 @@
 # Flappybird
-The game
+The game in python (pygame)
