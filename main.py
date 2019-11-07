@@ -13,6 +13,7 @@ THRESHOLDS = {
     'base': -337,
     'pipe': 72
 }
+FONT = pygame.font.SysFont("Arial", 12)
 
 b = bird.Bird()
 bird_hitbox = b.get_rect()
@@ -23,6 +24,7 @@ first_pipe = pipe.Pipe(512, 200, VELOCITY)
 pipes = [first_pipe]
 framecounter = 0
 score = 0
+flag = 0
 
 run = 1
 clock = pygame.time.Clock()
@@ -40,39 +42,14 @@ while run:
 
     # Pipes and bases spawning
     if pipes[-1].x < THRESHOLDS['pipe']:
-        pipes.append(pipe.Pipe(288, random.randint(50, 350), VELOCITY))
+        pipes.append(pipe.Pipe(288, random.randint(80, 330), VELOCITY))
     elif pipes[0].x + pipes[0].imgw < 0:
+        flag = 0
         pipes.pop(0)
     if bases[-1].x < 0:
         bases.append(base.Base(bases[-1].x + bases[-1].imgw, VELOCITY))
     elif bases[0].x < THRESHOLDS['base']:
         bases.pop(0)
-
-    # Updating and drawing
-    SCREEN.blit(BG_IMG, (0, 0))
-    b.update()
-    b.draw(SCREEN)
-    for p in pipes:
-        p.update()
-        p.draw(SCREEN)
-    for bs in bases:
-        bs.update()
-        bs.draw(SCREEN)
-    
-    # Animation
-    if framecounter > 12:
-        framecounter = 0
-        b.img_count = 0
-    if framecounter > 9:
-        b.img_count = 1
-    elif framecounter > 6:
-        b.img_count = 2
-    elif framecounter > 3:
-        b.img_count = 1
-    framecounter += 1
-
-    # Update display
-    pygame.display.flip()
 
     # Collision detection
     bird_hitbox = b.get_rect()
@@ -87,6 +64,40 @@ while run:
         print(danger)
         print(bird_hitbox, bird_hitbox.collidelist(danger))
         run = 0
+
+    # Score count
+    if flag == 0:
+        if pipes[0].x < 144:
+            score += 1
+            print(score)
+            flag = 1
+
+    # Updating and drawing
+    SCREEN.blit(BG_IMG, (0, 0))
+    b.update()
+    b.draw(SCREEN)
+    for p in pipes:
+        p.update()
+        p.draw(SCREEN)
+    for bs in bases:
+        bs.update()
+        bs.draw(SCREEN)
+    scr = FONT.render('Score : ' + str(score), True, (0, 0, 0))
+    SCREEN.blit(scr, (0, 0))
+    # Animation
+    if framecounter > 12:
+        framecounter = 0
+        b.img_count = 0
+    if framecounter > 9:
+        b.img_count = 1
+    elif framecounter > 6:
+        b.img_count = 2
+    elif framecounter > 3:
+        b.img_count = 1
+    framecounter += 1
+
+    # Update display
+    pygame.display.flip()
 
     # Clock tick
     clock.tick(FPS)
