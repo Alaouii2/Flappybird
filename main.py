@@ -26,8 +26,8 @@ framecounter = 0
 score = 0
 flag = 0
 
-run = 1
 clock = pygame.time.Clock()
+run = 1
 
 # main loop
 while run:
