@@ -57,6 +57,9 @@ def main(genomes, config):
         if len(birds) > 0:
             if len(pipes) > 1 and 144 > pipes[0].x + pipes[0].sprite1.get_width():
                 pipe_ind = 1
+        else:
+            run = 0
+            break
 
         for x, b in enumerate(birds):  # give each bird a fitness of 0.1 for each frame it stays alive
             ge[x].fitness += 0.1
