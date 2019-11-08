@@ -24,6 +24,7 @@ first_pipe = pipe.Pipe(512, 200, VELOCITY)
 pipes = [first_pipe]
 framecounter = 0
 score = 0
+distance = 0
 flag = 0
 
 clock = pygame.time.Clock()
@@ -32,17 +33,9 @@ run = 1
 # main loop
 while run:
 
-    # controls
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = 0
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                b.jump()
-
     # Pipes and bases spawning
     if pipes[-1].x < THRESHOLDS['pipe']:
-        pipes.append(pipe.Pipe(288, random.randint(80, 330), VELOCITY))
+        pipes.append(pipe.Pipe(288, random.randint(100, 300), VELOCITY))
     elif pipes[0].x + pipes[0].imgw < 0:
         flag = 0
         pipes.pop(0)
@@ -61,16 +54,14 @@ while run:
         pipe_hitboxes.extend(p.get_rect())
     danger = base_hitboxes + pipe_hitboxes
     if bird_hitbox.collidelist(danger) != -1:
-        print(danger)
-        print(bird_hitbox, bird_hitbox.collidelist(danger))
         run = 0
 
-    # Score count
+    # Score/distance count
     if flag == 0:
         if pipes[0].x < 144:
             score += 1
-            print(score)
             flag = 1
+    distance -= VELOCITY / 10
 
     # Updating and drawing
     SCREEN.blit(BG_IMG, (0, 0))
@@ -83,7 +74,9 @@ while run:
         bs.update()
         bs.draw(SCREEN)
     scr = FONT.render('Score : ' + str(score), True, (0, 0, 0))
+    dist = FONT.render('Distance : ' + str(round(distance)), True, (0, 0, 0))
     SCREEN.blit(scr, (0, 0))
+    SCREEN.blit(dist, (0, 15))
     # Animation
     if framecounter > 12:
         framecounter = 0
@@ -98,6 +91,14 @@ while run:
 
     # Update display
     pygame.display.flip()
+
+    # controls
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = 0
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                b.jump()
 
     # Clock tick
     clock.tick(FPS)
