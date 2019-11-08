@@ -163,6 +163,7 @@ def run(config_file):
 
     winner = p.run(main, 50)
 
+
     print('\nBest genome:\n{!s}'.format(winner))
 
 if __name__ == '__main__':
