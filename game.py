@@ -129,7 +129,6 @@ def main():
 
         # Clock tick
         clock.tick(FPS)
-        print(highscore)
     pygame.quit()
 
 
